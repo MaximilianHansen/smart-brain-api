@@ -12,7 +12,7 @@ import getEntries from "./controllers/entries.js"
 const db = knex({
     client: 'pg',
     connection: {
-      host : '127.0.0.1',
+      host : 'postgresql-elliptical-67345',
       port : 5432,
       user : 'maximilianhansen',
       database : 'smart-brain'
