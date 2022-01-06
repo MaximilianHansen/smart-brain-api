@@ -19,7 +19,12 @@ const db = knex({
 
 const app = express();
 
-app.use(cors())
+var corsOptions = {
+  origin: ['http://localhost:3000', 'https://damp-hamlet-34896.herokuapp.com/'],
+  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
+};
+
+app.use(cors(corsOptions))
 
 app.get('/products/:id', function (req, res, next) {
   res.json({msg: 'This is CORS-enabled for all origins!'})
