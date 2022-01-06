@@ -3,7 +3,11 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import knex from "knex";
 import bcrypt from "bcrypt-nodejs";
-
+import handleRegister from "./controllers/register.js";
+import signIn from "./controllers/signin.js";
+import getId from "./controllers/id.js";
+import handleApiCall from "./controllers/clarifai.js";
+import getEntries from "./controllers/entries.js"
 
 const db = knex({
     client: 'pg',
@@ -15,84 +19,23 @@ const db = knex({
     }
   });
 
-
-
 const app = express();
 
 app.use(bodyParser.json());
 app.use(cors())
 
 
-app.get('/', (req, res)=>{
-    res.send(database.users)
-})
+app.post('/signin', (req,res)=> {signIn(req, res, db, bcrypt)});
 
-app.post('/signin', (req,res)=> {
-   db.select('email','hash').from('login')
-   .where('email','=', req.body.email)
-   .then( data => {
-       const isvalid = bcrypt.compareSync(req.body.password, data[0].hash);
-       if (isvalid) { 
-           return db.select('*').from('users')
-             .where('email', '=', req.body.email)
-             .then( user => {
-                 res.json(user[0])
-             })
-             .catch(err=> res.status(400).json('unable to get user'))
-       } else {
-           res.status(400).json('wrong credentials')
-       }
-   })
-   .catch(err => res.status(400).json('wrong credentials'))
-   
-})
+app.post('/register', (req,res) => {handleRegister(req,res, db, bcrypt)});
 
-app.post('/register', (req,res)=> {
-    const {email, name, password} = req.body;
-    const hash = bcrypt.hashSync(password);
-        db.transaction(trx => {
-            trx.insert({
-                hash : hash,
-                email: email
-            })
-            .into('login')
-            .returning('email')
-            .then(loginEmail => { 
-                return trx('users')
-                .returning('*')
-                .insert({
-                        name: name,
-                        email: loginEmail[0],
-                        joined : new Date()
-                    }
-            ).then(user => {res.json(user[0])})
-            .then(trx.commit)
-            .catch(trx.rollback)
-            .catch(err => res.status(400).json('unable to register'))
-            })
-        })
-           
-})
+app.get('/profile/:id', (req,res)=> {getId(req, res)});
 
-app.get('/profile/:id', (req,res)=> {
-    const { id } = req.params;
-    db.select('*').from('users').where({id}).then(user=> {
-        if(user.length){
-            res.json(user[0])}
-          else {
-            res.status(400).json("not found")}
-    }) 
-})
+app.put('/image', (req,res) => {getEntries(req, res, db)})
 
-app.put('/image', (req,res) => {
-    const { id } = req.body;
-    db('users').where('id', '=', id)
-    .increment('entries', 1)
-    .returning('entries')
-    .then(entries => {res.json(entries[0]);
-    })
-    .catch(err => err.status(400).json('unable to get entries'))
-})
+app.post('/imageurl', (req,res) => {handleApiCall(req, res)})
 
-app.listen(3001, ()=> {console.log("app is running on port 3001")});
+const PORT = process.env.PORT
+
+app.listen(PORT, ()=> {console.log(`app is running on port ${PORT}`)});
 
