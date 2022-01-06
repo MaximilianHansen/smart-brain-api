@@ -20,7 +20,7 @@ const db = knex({
 const app = express();
 
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors({orgin : 'http://localhost:3000'}))
 
 app.get("/", (req,res) => {res.send('app is working')})
 
