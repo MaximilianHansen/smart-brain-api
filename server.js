@@ -6,7 +6,8 @@ import handleRegister from "./controllers/register.js";
 import signIn from "./controllers/signin.js";
 import getId from "./controllers/id.js";
 import handleApiCall from "./controllers/clarifai.js";
-import getEntries from "./controllers/entries.js"
+import getEntries from "./controllers/entries.js";
+import cors from "cors";
 
 const db = knex({
     client: 'pg',
@@ -17,8 +18,6 @@ const db = knex({
   });
 
 const app = express();
-var cors = require('cors')
-
 
 app.use(cors())
 
