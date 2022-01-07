@@ -22,7 +22,7 @@ const db = knex({
 const app = express();
 
 var corsOptions = {
-  origin: ['http://localhost:3000', 'https://damp-hamlet-34896.herokuapp.com/'],
+  origin: ['http://localhost:3000', 'https://damp-hamlet-34896.herokuapp.com/', 'https://imgrecogbrain.herokuapp.com/'],
   methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
 };
 
