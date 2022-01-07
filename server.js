@@ -7,7 +7,7 @@ import signIn from "./controllers/signin.js";
 import getId from "./controllers/id.js";
 import handleApiCall from "./controllers/clarifai.js";
 import getEntries from "./controllers/entries.js";
-import cors from "cors";
+var cors = require('cors')
 
 const db = knex({
     client: 'pg',
@@ -21,12 +21,7 @@ const db = knex({
 
 const app = express();
 
-var corsOptions = {
-  origin: ['https://imgrecogbrain.herokuapp.com/', 'https://damp-hamlet-34896.herokuapp.com/'],
-  methods: ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
-};
-
-app.use(cors(corsOptions))
+app.use(cors())
 
 app.use(bodyParser.json());
 
