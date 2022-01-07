@@ -7,7 +7,10 @@ import signIn from "./controllers/signin.js";
 import getId from "./controllers/id.js";
 import handleApiCall from "./controllers/clarifai.js";
 import getEntries from "./controllers/entries.js";
-var cors = require('cors')
+import cors from 'cors';
+
+const app = express();
+app.use(cors());
 
 const db = knex({
     client: 'pg',
@@ -19,9 +22,9 @@ const db = knex({
     }
   });
 
-const app = express();
 
-app.use(cors())
+
+
 
 app.use(bodyParser.json());
 
