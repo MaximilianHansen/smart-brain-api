@@ -14,7 +14,7 @@
     "pv": "^1.0.1"
   },
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js"
   },
   "type": "module"
 }
