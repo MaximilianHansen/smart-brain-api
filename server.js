@@ -22,10 +22,6 @@ const db = knex({
     }
   });
 
-
-
-
-
 app.use(bodyParser.json());
 
 app.get("/", (req,res) => {res.send('app is working')})
